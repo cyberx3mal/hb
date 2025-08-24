@@ -51,6 +51,9 @@ header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 header h1{margin:0;font-size:1.6rem;color:var(--accent);letter-spacing:0.2px}
 header .sub{color:var(--muted-text);font-size:0.9rem}
 header button{background:transparent;border:1px solid var(--border-color);padding:8px 12px;border-radius:10px;cursor:pointer;color:var(--text)}
+header{gap:12px}
+.header-center{flex:1;display:flex;justify-content:center}
+.header-right{margin-left:auto;display:flex}
 
 .step{background:linear-gradient(180deg, var(--card-1) 0%, var(--card-2) 100%);padding:20px;border-radius:14px;box-shadow:var(--card-shadow);border:1px solid var(--border-color)}
 
@@ -67,14 +70,21 @@ header button{background:transparent;border:1px solid var(--border-color);paddin
 	40%, 60% { transform: translateX(4px); }
 }
 
-.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .actions button{background:linear-gradient(90deg,var(--accent),#ff8fe6);color:white;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;box-shadow:0 6px 14px rgba(167,112,255,0.18);font-weight:600;min-height:44px;font-size:16px}
 .actions button:active{transform:translateY(1px)}
 
-.password-screen{max-width:var(--phone-max-width);margin:0 auto;padding:24px;border-radius:14px;background:linear-gradient(180deg,var(--card-1),var(--soft-pink)); box-shadow:var(--card-shadow);border:1px solid var(--border-color)}
-.password-screen input{width:100%;max-width:100%;display:block;padding:12px 14px;border-radius:10px;border:1px solid rgba(74,74,90,0.18);margin-top:10px;min-height:44px;font-size:16px;background:var(--card-2);color:var(--text)}
+.password-screen{max-width:var(--phone-max-width);margin:0 auto;padding:24px;border-radius:14px;background:linear-gradient(180deg,var(--card-1),var(--soft-pink)); box-shadow:var(--card-shadow);border:1px solid var(--border-color);text-align:center}
+.password-screen input{width:100%;max-width:100%;display:block;padding:12px 40px 12px 14px;border-radius:10px;border:1px solid rgba(74,74,90,0.18);margin-top:10px;min-height:44px;font-size:16px;background:var(--card-2);color:var(--text);text-align:center}
+.password-screen input.wrong{border-color:#c0392b; box-shadow:0 0 0 3px rgba(192,57,43,0.2)}
+.password-screen .input-wrap{width:280px;position:relative;margin:0 auto}
+.password-screen .icon-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;color:var(--muted-text);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.password-screen .icon-btn:hover{color:var(--text);background:rgba(0,0,0,0.04)}
+[data-theme="dark"] .password-screen .icon-btn:hover{background:rgba(255,255,255,0.06)}
+.password-screen .icon-btn:active{transform:translateY(-50%) scale(0.96)}
 .password-screen .login-title{margin:0 0 8px;font-size:1.25rem;color:var(--text)}
 .password-screen .login-question{color:var(--muted-text);margin-bottom:8px}
+.password-screen .error, .password-screen .hint{display:block;text-align:center}
 .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
 
 /* inputs inside steps */
@@ -102,6 +112,22 @@ header button{background:transparent;border:1px solid var(--border-color);paddin
 
 .nav{display:flex;justify-content:space-between;margin-top:18px}
 .nav button{background:transparent;border:1px solid var(--border-color);padding:12px 14px;border-radius:10px;cursor:pointer;color:var(--text);min-height:44px;font-size:16px}
+.nav .btn-back{border-color:#c0392b;color:#c0392b}
+.nav .btn-back:hover{box-shadow:0 4px 12px rgba(192,57,43,0.15)}
+.nav .btn-next{border-color:#9aa0a6;color:#9aa0a6;transition:transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease}
+.nav .btn-next:not([disabled]){border-color:#28a745;color:#fff;background:linear-gradient(90deg,#28a745,#47d364);box-shadow:0 10px 28px rgba(40,167,69,0.35), 0 0 0 3px rgba(40,167,69,0.25) inset;animation:next-pop .32s ease-out, next-pulse 1.6s ease-in-out 0.3s 3}
+.nav .btn-next:not([disabled]):hover{box-shadow:0 14px 36px rgba(40,167,69,0.45), 0 0 0 3px rgba(40,167,69,0.35) inset;transform:translateY(-1px)}
+
+@keyframes next-pop{
+	0%{transform:scale(0.92); box-shadow:0 0 0 rgba(40,167,69,0)}
+	60%{transform:scale(1.06); box-shadow:0 18px 36px rgba(40,167,69,0.45)}
+	100%{transform:scale(1)}
+}
+@keyframes next-pulse{
+	0%{box-shadow:0 0 0 0 rgba(40,167,69,0.0), 0 0 0 3px rgba(40,167,69,0.0) inset}
+	50%{box-shadow:0 0 0 10px rgba(40,167,69,0.22), 0 0 0 4px rgba(40,167,69,0.35) inset}
+	100%{box-shadow:0 0 0 0 rgba(40,167,69,0.0), 0 0 0 3px rgba(40,167,69,0.25) inset}
+}
 
 .progress{margin-top:12px;text-align:center}
 .progress small{background:linear-gradient(90deg,var(--soft-pink),var(--soft-lilac));padding:6px 10px;border-radius:999px;color:var(--text);font-weight:600}
@@ -126,3 +152,26 @@ button:disabled{opacity:0.7;cursor:not-allowed}
 	header h1{font-size:1.3rem}
 	.step{padding:16px}
 }
+
+/* truth or lie list */
+.check-list{list-style:none;margin:12px 0;padding:0;display:grid;gap:10px}
+.check-item{display:flex;align-items:flex-start;gap:10px;line-height:1.35;text-align:left}
+.check-item input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--accent)}
+.check-item span{display:block;flex:1;word-break:break-word}
+.check-item.ok{outline:2px solid #28a745;outline-offset:2px;border-radius:8px;padding:6px}
+.check-item.should{outline:2px dashed #f39c12;outline-offset:2px;border-radius:8px;padding:6px}
+.check-item.wrong{outline:2px solid #c0392b;outline-offset:2px;border-radius:8px;padding:6px}
+
+/* info banner for simple info steps */
+.info-banner{display:flex;align-items:center;gap:10px;margin:12px 0;padding:14px 16px;border-radius:12px;
+	background:linear-gradient(90deg,var(--soft-pink), var(--soft-lilac));
+	border:1px solid var(--border-color);box-shadow:var(--card-shadow)}
+.info-banner .info-emoji{font-size:1.25rem}
+.info-banner .info-text{font-size:18px;font-weight:700}
+
+/* modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-window{background:linear-gradient(180deg,var(--card-1),var(--card-2));border:1px solid var(--border-color);box-shadow:var(--card-shadow);padding:18px 16px;border-radius:12px;max-width:90%;color:var(--text);text-align:center}
+
+/* note box on intro */
+.note-box{margin:12px 0;padding:12px 14px;border:1px dashed var(--border-color);border-radius:10px;color:var(--text);background:rgba(0,0,0,0.02)}

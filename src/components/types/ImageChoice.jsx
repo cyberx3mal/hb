@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getSuccessMessage } from "../../utils/messages";
 
 export default function ImageChoice({ step, onDone }) {
   const [picked, setPicked] = useState(null);
@@ -6,23 +7,31 @@ export default function ImageChoice({ step, onDone }) {
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("error");
   const [lastWrong, setLastWrong] = useState(null);
+  const [successText, setSuccessText] = useState("Правильно!");
 
   function onPick(i) {
     if (solved) return;
     setPicked(i);
-    const src = step.images[i];
+  }
+
+  function verify() {
+    if (picked == null) {
+      setToastType("error");
+      setToast("Выбери фото");
+      setTimeout(() => setToast(""), 1000);
+      return;
+    }
+    const src = step.images[picked];
     const ok = src === step.correctSrc;
     if (ok) {
       setSolved(true);
-      setToastType("success");
-      setToast("Правильно!");
-      setTimeout(() => setToast(""), 900);
-      setTimeout(() => onDone(), 900);
+      setSuccessText(prev => getSuccessMessage(prev));
+      onDone({ stay: true });
     } else {
-      setLastWrong(i);
+      setLastWrong(picked);
       setToastType("error");
       setToast("Неверно, попробуй ещё");
-      setTimeout(() => setToast(""), 1200);
+      setTimeout(() => setToast(""), 1400);
       setTimeout(() => setLastWrong(null), 900);
     }
   }
@@ -44,7 +53,11 @@ export default function ImageChoice({ step, onDone }) {
           );
         })}
       </div>
+      <div className="actions">
+        <button type="button" onClick={verify}>Проверить</button>
+      </div>
     {toast && <div className={`toast ${toastType}`}>{toast}</div>}
+  {solved && <div className="success">{successText}</div>}
       {step.hint && !solved && <small>{step.hint}</small>}
     </div>
   );

@@ -1,24 +1,36 @@
 import React, { useState } from "react";
+import { getSuccessMessage } from "../../utils/messages";
 
 export default function MultiChoice({ step, onDone }) {
   const [selected, setSelected] = useState(null);
   const [lastWrong, setLastWrong] = useState(null);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("error");
+  const [solved, setSolved] = useState(false);
+  const [successText, setSuccessText] = useState("Правильно!");
 
   function onPick(i) {
     setSelected(i);
-    const ok = i === step.answerIndex;
-    if (ok) {
-      setToast("Правильно!");
-      setToastType("success");
-      setTimeout(() => setToast(""), 800);
-      setTimeout(() => onDone(), 700);
-    } else {
-      setLastWrong(i);
-      setToast("Неверно, попробуй ещё");
+  }
+
+  function verify() {
+    if (selected == null) {
       setToastType("error");
-      setTimeout(() => setToast(""), 1200);
+      setToast("Выбери вариант");
+      setTimeout(() => setToast(""), 1000);
+      return;
+    }
+    const ok = selected === step.answerIndex;
+    if (ok) {
+  setSolved(true);
+  setSuccessText(prev => getSuccessMessage(prev));
+      onDone({ stay: true });
+    } else {
+      setLastWrong(selected);
+      const wrongText = (step.wrongMessages && step.wrongMessages[selected]) || step.wrongMessage || "Неверно, попробуй ещё";
+      setToast(wrongText);
+      setToastType("error");
+      setTimeout(() => setToast(""), 1400);
       setTimeout(() => setLastWrong(null), 900);
     }
   }
@@ -39,8 +51,14 @@ export default function MultiChoice({ step, onDone }) {
           );
         })}
       </div>
-      {toast && <div className={`toast ${toastType}`}>{toast}</div>}
-      <small>{step.hint}</small>
+      <div className="actions">
+        <button type="button" onClick={verify}>Проверить</button>
+      </div>
+  {toast && <div className={`toast ${toastType}`}>{toast}</div>}
+  {solved && <div className="success">{successText}</div>}
+      {lastWrong != null && step.hint && (
+        <small className="hint">Подсказка: {step.hint}</small>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { getSuccessMessage } from "../../utils/messages";
 
 export default function ImagePuzzle({ step, onDone }) {
   const grid = step.grid || 3;
@@ -11,11 +12,12 @@ export default function ImagePuzzle({ step, onDone }) {
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("success");
   const [shake, setShake] = useState(false);
+  const [successText, setSuccessText] = useState("Правильно!");
 
   const triggerDone = () => {
     if (doneRef.current) return;
     doneRef.current = true;
-    onDone();
+    onDone({ stay: true });
   };
   useEffect(() => {
     const arr = Array.from({ length: total }, (_, i) => i);
@@ -32,7 +34,8 @@ export default function ImagePuzzle({ step, onDone }) {
   useEffect(() => {
     if (!solved && tiles.length === total && tiles.every((v, i) => v === i)) {
       setSolved(true);
-      const id = setTimeout(() => triggerDone(), 1200);
+  setSuccessText(prev => getSuccessMessage(prev));
+  const id = setTimeout(() => triggerDone(), 1200);
       return () => clearTimeout(id);
     }
   }, [tiles, total, solved, onDone]);
@@ -43,7 +46,8 @@ export default function ImagePuzzle({ step, onDone }) {
   const id = setInterval(() => {
       if (tiles.length === total && tiles.every((v,i)=>v===i)) {
     setSolved(true);
-    triggerDone();
+  setSuccessText(prev => getSuccessMessage(prev));
+  triggerDone();
       }
     }, 500);
     return () => clearInterval(id);
@@ -65,6 +69,7 @@ export default function ImagePuzzle({ step, onDone }) {
     setSelected(null);
   if (t.every((val, idx) => val === idx)) {
       setSolved(true);
+  setSuccessText(prev => getSuccessMessage(prev));
       setTimeout(() => triggerDone(), 1200); // небольшая пауза, чтобы показать успех
     }
   }
@@ -74,7 +79,9 @@ export default function ImagePuzzle({ step, onDone }) {
     if (ok) {
       setSolved(true);
       setToastType("success");
-      setToast("Собрано!");
+  const msg = getSuccessMessage(successText);
+  setToast(msg);
+  setSuccessText(msg);
       setTimeout(() => setToast(""), 900);
       setTimeout(() => triggerDone(), 800);
     } else {
@@ -122,7 +129,7 @@ export default function ImagePuzzle({ step, onDone }) {
           );
         })}
         {solved && <ConfettiBurst targetRef={gridRef} />}
-        {solved && <div className="puzzle-banner">Собрано!</div>}
+  {solved && <div className="puzzle-banner">{successText}</div>}
         {solved && (
           <button type="button" className="complete-btn" onClick={triggerDone}>
             Завершить
@@ -133,7 +140,7 @@ export default function ImagePuzzle({ step, onDone }) {
         <button type="button" onClick={manualCheck}>Проверить</button>
       </div>
       {toast && <div className={`toast ${toastType}`}>{toast}</div>}
-      {solved && <div className="success" aria-live="polite">Задание выполнено!</div>}
+  {solved && <div className="success" aria-live="polite">{successText}</div>}
       <small>{step.hint}</small>
     </div>
   );
